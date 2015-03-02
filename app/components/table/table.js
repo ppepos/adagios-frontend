@@ -9,7 +9,7 @@ angular.module('adagios.table', ['adagios.live',
                                  'adagios.table.cell_last_check',
                                  'adagios.table.cell_hosts_host',
                                  'adagios.table.cell_host_address',
-                                 'adagios.table.cell_host_status'
+                                 'adagios.table.cell_host_status',
                                 ])
 
     .value('tableConfig', { cells: { 'text': [], 'name': [] },
@@ -22,8 +22,8 @@ angular.module('adagios.table', ['adagios.live',
                             refreshInterval: '0'
                           })
 
-    .controller('TableCtrl', ['$scope', '$interval', 'getServices', 'tableConfig', 'processColumnRepeat',
-        function ($scope, $interval, getServices, tableConfig, processColumnRepeat) {
+    .controller('TableCtrl', ['$scope', '$interval', 'getServices', 'tableConfig', 'actionbarFilters', 'processColumnRepeat',
+        function ($scope, $interval, getServices, tableConfig, actionbarFilters, processColumnRepeat) {
 
         var requestFields = [],
             filters = JSON.parse(tableConfig.filters),
@@ -56,7 +56,7 @@ angular.module('adagios.table', ['adagios.live',
 
                         $scope.entries = data;
                     });
-            }
+            };
 
         $scope.getData(requestFields, filters, tableConfig.apiName);
         
@@ -65,6 +65,8 @@ angular.module('adagios.table', ['adagios.live',
                 $scope.getData(requestFields, filters, tableConfig.apiName);
             }, tableConfig.refreshInterval);
         }
+
+        $scope.actionbarFilters = actionbarFilters;
 
     }])
 
