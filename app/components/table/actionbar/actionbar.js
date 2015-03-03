@@ -20,7 +20,8 @@ angular.module('adagios.table.actionbar', [])
                     text: "All in Downtime",
                     name: "all_downtime"
                 }
-            ]
+            ],
+			searchFilter: ""
         };
         return actionbarFilters;
     })
