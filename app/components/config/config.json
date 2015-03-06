@@ -25,7 +25,7 @@
         },
 		"isWrappable" : true,
 		"noRepeatCell" : "host",
-		"refreshInterval": "10000"
+		"refreshInterval": 10000
     },
     "hostsConfig": {
 		"title": "Hosts",

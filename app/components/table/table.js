@@ -60,7 +60,7 @@ angular.module('adagios.table', ['adagios.live',
 
         $scope.getData(requestFields, filters, tableConfig.apiName);
         
-        if (tableConfig.refreshInterval !== '0') {
+        if (tableConfig.refreshInterval != 0) {
             $interval(function() {
                 $scope.getData(requestFields, filters, tableConfig.apiName);
             }, tableConfig.refreshInterval);
@@ -129,12 +129,6 @@ angular.module('adagios.table', ['adagios.live',
     }])
 
     .service('processColumnRepeat', function() {
-        
-        function clearFields(entry, fields) {
-            angular.forEach(fields, function (value) {
-               entry[value] = ''; 
-            });
-        };
 
         // Erase subsequently repeated data of a given cell only keeping the first occurrence
         // fieldToProcess is the field to watch for subsequent repetition
@@ -151,7 +145,7 @@ angular.module('adagios.table', ['adagios.live',
             if (isWrappable == "true") {
                 class_name = ['state--hasChild', 'state--isChild'];
             }
-            
+
             for (i = 0; i < data.length; i += 1) {
                 entry = data[i];
                 actual = entry[fieldToProcess];
@@ -168,8 +162,6 @@ angular.module('adagios.table', ['adagios.live',
                         entry.child_class = class_name[1];
                     }
 
-                    clearFields(entry, fields);
-
                 } else {
                     first_child = false;
                     parent_found = false;
@@ -180,4 +172,28 @@ angular.module('adagios.table', ['adagios.live',
 
             return data;
         }
-    });
+    })
+
+    .filter('noRepeat', ['tableConfig', function (tableConfig) {
+        return function (items) {
+            var newItems = [],
+                previous = undefined;
+
+            angular.forEach(items, function (item) {
+
+                var fieldsToClear = tableConfig.cellToFieldsMap[tableConfig.noRepeatCell],
+                    fieldToCompare = tableConfig.cellWrappableField[tableConfig.noRepeatCell],
+                    emptyContent = "";
+
+                if (previous === item[fieldToCompare]) {
+                    angular.forEach(fieldsToClear, function (field) {
+                        item[field] = emptyContent;
+                    });
+                } else {
+                    previous = item[fieldToCompare].slice(0);
+                }
+                newItems.push(item);
+            });
+            return newItems;
+        };
+    }]);
